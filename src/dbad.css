@@ -1,0 +1,56 @@
+@import url("http://fonts.googleapis.com/earlyaccess/nanumgothic.css");
+
+html{height: 100%;}
+.login_content {width:100%;height:100%;margin: 0;padding-top: 80px;padding-bottom: 40px;font-family: "Nanum Gothic", arial, helvetica, sans-serif;background-repeat: no-repeat;background:linear-gradient(to bottom right, #0098FF, #6BA8D1);}
+.card {margin: 0 auto; /* Added */float: none; /* Added */margin-bottom: 10px; /* Added */box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);}
+.form-signin .form-control {position: relative;height: auto;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding: 10px;font-size: 16px;}
+
+#content{width:100%}
+.top{width:100%;border-bottom:1px solid #ccc; margin-bottom:10px;}
+.top_title{width:100%; height:60px;display:flex;align-items:center;justify-content:space-between;background-color:#363636;color:#ddd;}
+.top_title .tp{margin:0;padding:0;font-weight:700;font-size:18px;margin-left:2%;}
+.top_title .dropdown{margin:0;padding:0;font-weight:700;font-size:18px;margin-right:2%;}
+.top_title .dropdown .dropdown-menu{min-width:80px;width:85px;text-align:center;}
+.top_title .dropdown .dropdown-menu > li > a{padding:0px;margin:0px;}
+.place{display:flex;flex-direction:row;padding:10px;}
+.left_menu{height:100px;width:10%;margin-right:10px;}
+.left_menu div{width:100%;}
+.left_menu button{margin-bottom:10px;}
+
+#data_list{width:100%;height:auto;text-align:center;}
+#data_list .list{width:100%;border:1px solid #ccc;}
+#data_list .mb_name{position:absolute;left:10px;bottom:0px;font-size:1.2rem;font-weight:bold;color:#8904B1;}
+.tr_head{background-color:#EFFBEF}
+th{text-align:center;}
+
+
+#mb_list{width:100%;height:auto;text-align:center;}
+#mb_list .cont{width:100%; height:auto;padding-bottom:20px;display:flex;}
+#mb_list .cont .list{width:60%;border:1px solid #ccc;border-radius:10px;}
+#mb_list .cont .tr_head{background-color:#EFFBEF}
+#mb_list .cont .td_btn{width:15%;}
+#mb_list .cont .td_btn button{width:30%;}
+#mb_list .cont .td_btn .btn2{margin-left:10px;}
+#mb_list .cont .td_num{width:5%;}
+#mb_list .cont .td_id{width:15%;}
+#mb_list .cont .td_cont{width:17%;}
+#mb_list td {vertical-align:middle;}
+#mb_list .cont .right{border:1px solid #ccc;border-radius:10px;margin-left:3%;padding-bottom:10px;}
+#mb_list input{text-align:center;width:250px;margin:0 auto;}
+#mb_list select{text-align:center;width:250px;margin:0 auto;}
+
+
+#ad_list{width:100%;height:auto;text-align:center;}
+#ad_list .cont{width:100%; height:auto;padding-bottom:20px;display:flex;}
+#ad_list .cont .list{width:60%;border:1px solid #ccc;border-radius:10px;}
+#ad_list .cont .tr_head{background-color:#EFFBEF}
+#ad_list .cont .td_btn{width:15%;}
+#ad_list .cont .td_btn button{width:30%;}
+#ad_list .cont .td_btn .btn2{margin-left:10px;}
+#ad_list .cont .td_num{width:5%;}
+#ad_list .cont .td_id{width:15%;}
+#ad_list .cont .td_cont{width:17%;}
+#ad_list td {vertical-align:middle;}
+#ad_list .cont .right{border:1px solid #ccc;border-radius:10px;margin-left:3%;padding-bottom:10px;}
+#ad_list input{text-align:center;width:250px;margin:0 auto;}
+#ad_list select{text-align:center;width:250px;margin:0 auto;}
