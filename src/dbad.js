@@ -23,6 +23,8 @@ function move(num){
     location.href='dbad_member.php';
   }else if(num==3){
     location.href='dbad_class.php';
+  }else if(num==4){
+    location.href='dbad_trans.php';
   }
 }
 
@@ -210,4 +212,100 @@ function delete_class(num){
       }
     });
   }
+}
+
+function chkIp(){
+  let rchk = $("input[name=cho_ip]:checked").val();
+  let ip1 = $("input[name=ip"+rchk+"1]").val();
+  let ip2 = $("#ip2"+rchk).val();
+  let ip3 = $("input[name=ip"+rchk+"3]").val();
+  let ip4 = $("input[name=ip"+rchk+"4]").val();
+
+  if(!rchk){
+    alert("IP대역을 선택 해 주세요.");
+    return false;
+  }
+  if(!ip3){
+    alert("세번째칸이 입력되지 않았습니다");
+    return false;
+  }
+  if(!ip4){
+    alert("네번째칸이 입력되지 않았습니다");
+    return false;
+  }
+  if(ip3 < 2){
+    alert("세번째칸은 2보다 작을 수 없습니다.");
+    return false;
+  }
+  if(ip3 > 254){
+    alert("세번째칸은 254보다 클 수 없습니다.");
+    return false;
+  }
+  if(ip4 < 2){
+    alert("네번째칸은 2보다 작을 수 없습니다.");
+    return false;
+  }
+  if(ip4 > 254){
+    alert("네번째칸은 254보다 클 수 없습니다.");
+    return false;
+  }
+  let cho_ip = ip1+"."+ip2+"."+ip3+"."+ip4;
+  return cho_ip;
+}
+
+
+function confirmIp(){
+  let ipaddr = chkIp();
+  if(ipaddr){
+    let box = {"w_type":"chk_ip", "ipaddr":ipaddr}
+    $.ajax({
+            url: "ajax.dbad_proc.php",
+            type: "post",
+            contentType:'application/x-www-form-urlencoded;charset=UTF8',
+            data: box
+    }).done(function(data){
+      let json = JSON.parse(data);
+      if(json.re=="KR"){
+        alert(ipaddr+"\n국내 IP주소 입니다.");
+      }else{
+        alert(ipaddr+"\n해외 IP주소 입니다.");
+      }
+    });
+  }
+}
+
+
+function sendDummy(){
+  let ipaddr = chkIp();
+  if(!ipaddr){
+    return false;
+  }
+  let w_date = $("#DatePicker").val();
+  let name = $("input[name=name]").val();
+  let tel_num = $("input[name=tel_num]").val();
+  let sclass = $("#sl2").val();
+  let hms = $("#hms").val();
+
+  if(confirm("전송하시겠습니까?")){
+    let box = {"w_type":"send_dummy", "ipaddr":ipaddr, "w_date":w_date, "name":name, "tel_num":tel_num, "class":sclass, "hms":hms}
+    $.ajax({
+            url: "ajax.dbad_proc.php",
+            type: "post",
+            contentType:'application/x-www-form-urlencoded;charset=UTF8',
+            data: box
+    }).done(function(data){
+      let json = JSON.parse(data);
+      console.log(json.sql);
+      if(json.state=="Y"){
+        alert("전송했습니다.");
+      }else{
+        alert("전송에 실패 했습니다.");
+      }
+    });
+  }
+
+
+  // 위 데이터들을 원하는 데이터형식으로 취합해 URL 또는 API를 이용하면 된다.
+
+
 }

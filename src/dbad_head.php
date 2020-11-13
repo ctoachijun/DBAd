@@ -10,6 +10,10 @@ if(!chk_token($token,$mb_id)){
 }
 
 
+// echo $mb_id;
+// echo "<br>";
+// echo $token;
+
 // print_r($_SESSION);
 
 
@@ -17,7 +21,7 @@ if(!$mb_id){
   echo "
     <script>
       alert('로그인 해주세요.');
-      document.location.href='./login.php'
+      document.location.href='../index.php'
     </script>
     ";
 }
@@ -55,10 +59,14 @@ if(!$mb_id){
     <div class="top">
       <div class="top_title">
         <p class="tp">데이터 리스트</p>
-        <div class="dropdown">
-          <button class="btn btn-default dropdown-toggle" data-toggle="dropdown"><?=$mb_id?> | <span class="caret"></span></button>
+        <div class="btn-group">
+          <button type="button" class="btn btn-danger"><?=$mb_id?></button>
+          <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            <span class="caret"></span>
+            <span class="sr-only"></span>
+          </button>
           <ul class="dropdown-menu" role="menu">
-            <li role="presentation"><a href="./login.php?logout=out">로그아웃</a></li>
+            <li role="presentation"><a href="../index.php?logout=out">로그아웃</a></li>
           </ul>
         </div>
       </div>
@@ -71,6 +79,7 @@ if(!$mb_id){
       <? if($mb_id=="admin"){ ?>
           <button class="btn btn-primary" onclick="move(2)">회원관리</button>
           <button class="btn btn-primary" onclick="move(3)">광고관리</button>
+          <button class="btn btn-primary" onclick="move(4)">전송관리</button>
         <? } ?>
         </div>
       </div>
