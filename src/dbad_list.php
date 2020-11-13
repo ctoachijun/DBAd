@@ -3,6 +3,9 @@ include_once('./dbad_head.php');
 
 $url = $_SERVER['REQUEST_URI'];
 
+if(!$ref){
+  $ref=0;
+}
 if(!$num){
   $num=1;
 }

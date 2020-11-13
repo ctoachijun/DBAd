@@ -304,7 +304,7 @@ function getPaging($table,$cur_page,$mb_id,$ref){
     }
 
     if($ref > 0){
-      $type_txt = "&& type={$ref}";
+      $type_txt = " && type={$ref}";
     }else{
       $type_txt = "";
     }
@@ -375,8 +375,8 @@ function getPaging($table,$cur_page,$mb_id,$ref){
 
 
   $cur_path = $_SERVER['SCRIPT_NAME'];
-  $prev_url = $cur_path."?table={$table}&cur_page={$pre_block}&start={$prev_start}&end={$page_rows}";
-  $next_url = $cur_path."?table={$table}&cur_page={$next_block}&start={$next_start}&end={$page_rows}";
+  $prev_url = $cur_path."?table={$table}&cur_page={$pre_block}&start={$prev_start}&end={$page_rows}&ref={$ref}";
+  $next_url = $cur_path."?table={$table}&cur_page={$next_block}&start={$next_start}&end={$page_rows}&ref={$ref}";
 
 
   // 이전, 다음버튼 제어 처리
@@ -411,7 +411,7 @@ function getPaging($table,$cur_page,$mb_id,$ref){
       $cont = "<a>{$i}</a>";
     }else{
       $act = " ";
-      $cur_url = $cur_path."?table={$table}&cur_page={$i}&end={$page_rows}";
+      $cur_url = $cur_path."?table={$table}&cur_page={$i}&end={$page_rows}&ref={$ref}";
       $cont = "<a href='{$cur_url}'>{$i}</a>";
     }
     echo "<li class='{$act}'>{$cont}</li>";
