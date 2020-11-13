@@ -66,7 +66,8 @@ if(!$mb_id){
             <span class="sr-only"></span>
           </button>
           <ul class="dropdown-menu" role="menu">
-            <li role="presentation"><a href="../index.php?logout=out">로그아웃</a></li>
+            <!-- <li role="presentation"><a href="../index.php?logout=out">로그아웃</a></li> -->
+            <li role="presentation"><a onclick="location.replace('../index.php?logout=out')">로그아웃</a></li>
           </ul>
         </div>
       </div>

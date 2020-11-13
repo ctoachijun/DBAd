@@ -140,7 +140,7 @@ switch($w_type){
 
   case "send_dummy" :
     $sql = "INSERT INTO d_log_info SET
-    name='{$name}', tel='{$tel_num}', ip_addr='{$ipaddr}', w_date='{$w_date}', w_hour='{$hms}', type={$class}";
+    name='{$name}', tel='{$tel_num}', ip_addr='{$ipaddr}', w_date='{$w_date}', w_hour='{$hms}', type={$type}, class={$class}";
     $re = sql_query($sql);
 
     $output['sql'] = $sql;

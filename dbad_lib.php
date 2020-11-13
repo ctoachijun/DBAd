@@ -79,7 +79,7 @@ function chk_token($token,$mb_id){
 
 }
 
-function getList($start,$end,$mb_id){
+function getList($start,$end,$mb_id,$ref){
   $sql = "SELECT class FROM d_ad_member WHERE mb_id='{$mb_id}'";
   $box = sql_fetch($sql);
   $m_class = $box['class'];
@@ -90,12 +90,18 @@ function getList($start,$end,$mb_id){
   }
 
   if($mb_id=='admin'){
-    $type_txt = "1";
+    $class_txt = "1";
   }else{
-    $type_txt = "type = {$m_class}";
+    $class_txt = "class = {$m_class}";
   }
 
-  $sql = "SELECT * FROM d_log_info WHERE $type_txt ORDER BY w_date DESC, w_hour DESC LIMIT $slimit,$end";
+  if($ref > 0){
+    $type_txt = "&& type={$ref}";
+  }else{
+    $type_txt = "";
+  }
+
+  $sql = "SELECT * FROM d_log_info WHERE {$class_txt} {$type_txt} ORDER BY w_date DESC, w_hour DESC LIMIT {$slimit},{$end}";
   $re = sql_query($sql);
 
   $i = $slimit + 1;
@@ -106,9 +112,10 @@ function getList($start,$end,$mb_id){
     $w_date = $rs['w_date'];
     $w_hour = $rs['w_hour'];
     $type = $rs['type'];
+    $class = $rs['class'];
 
     $wh = $w_date." ".$w_hour;
-    $csql = "SELECT c_name FROM d_class WHERE idx={$type}";
+    $csql = "SELECT c_name FROM d_class WHERE idx={$class}";
     $cbox = sql_fetch($csql);
     $c_name = $cbox['c_name'];
 
@@ -121,12 +128,34 @@ function getList($start,$end,$mb_id){
       $red_class = "";
     }
 
+    if($type==1){
+      $type_txt = "다음";
+    }else if($type==2){
+      $type_txt = "네이버";
+    }else if($type==3){
+      $type_txt = "구글";
+    }else if($type==4){
+      $type_txt = "뉴스기사";
+    }else if($type==5){
+      $type_txt = "블로그";
+    }else if($type==6){
+
+    }else if($type==7){
+
+    }else if($type==8){
+
+    }else{
+      $type_txt = "불명";
+    }
+
+
     echo "<tr>";
     echo "<td {$red_class}>{$i}</td>";
     echo "<td {$red_class}>{$name}</td>";
     echo "<td {$red_class}>{$tel}</td>";
     echo "<td {$red_class}>{$ip_addr}</td>";
     echo "<td {$red_class}>{$wh}</td>";
+    echo "<td {$red_class}>{$type_txt}</td>";
     echo "<td {$red_class}>{$c_name}</td>";
     echo "</tr>";
 
@@ -258,7 +287,7 @@ function getClassSelector(){
 }
 
 
-function getPaging($table,$cur_page,$mb_id){
+function getPaging($table,$cur_page,$mb_id,$ref){
   if($table == "d_ad_member"){
     $where = "mb_id <> 'admin'";
   }else if($table == "d_class"){
@@ -271,11 +300,16 @@ function getPaging($table,$cur_page,$mb_id){
     if($mb_id=='admin'){
       $where = "1";
     }else{
-      $where = "type = {$m_class}";
+      $where = "class = {$m_class}";
     }
 
+    if($ref > 0){
+      $type_txt = "&& type={$ref}";
+    }else{
+      $type_txt = "";
+    }
+    $where .= $type_txt;
   }
-
 
 
   $sql = "SELECT * FROM {$table} WHERE {$where}";

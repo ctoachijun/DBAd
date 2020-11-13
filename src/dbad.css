@@ -21,8 +21,11 @@ html{height: 100%;}
 button{border:1px solid #aaa}
 
 #data_list{width:100%;height:auto;text-align:center;}
-#data_list .list{width:70%;height:550px;border:1px solid #ccc;border-radius:10px;}
+#data_list .list{width:100%;display:flex;}
+#data_list .list .d_list{width:70%;height:550px;border:1px solid #ccc;border-radius:10px;}
 #data_list .list .red{color:red;}
+#data_list .list .r_btn{width:8%;height:230px;margin-left:2%;border:1px solid #ccc;border-radius:10px;padding:10px;text-align:left;display:flex;flex-direction:column;}
+#data_list .list .r_btn .radio_b{margin-bottom:10px;margin-top:1px;}
 #data_list .paging{width:70%;}
 #data_list .mb_name{position:absolute;left:10px;bottom:0px;font-size:1.2rem;font-weight:bold;color:#8904B1;}
 #data_list .th_num{width:5%;}

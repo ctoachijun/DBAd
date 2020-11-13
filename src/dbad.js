@@ -306,6 +306,9 @@ function sendDummy(){
 
 
   // 위 데이터들을 원하는 데이터형식으로 취합해 URL 또는 API를 이용하면 된다.
+}
 
 
+function sortRef(){
+  $("FORM").submit();
 }
