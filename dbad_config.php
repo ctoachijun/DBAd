@@ -4,7 +4,6 @@ $user = "dmsxor0131";
 $pass = "qweqwe123!";
 $db = "dbdmsxor0131";
 
-
 // DB서버에 접속
 global $db_con;
 $db_con = @mysqli_connect($host,$user,$pass,$db);
@@ -13,6 +12,13 @@ if(!$db_con){
   echo mysqli_connect_error();
   exit;
 }
+
+$token_sql = "SELECT * FROM d_ad_member WHERE mb_id='".$_SESSION['mb_id']."'";
+$token_re = sql_fetch($token_sql);
+$token_rs = $token_re['_token'];
+
+if($token_rs != $_SESSION['token']) exit;
+
 
 function sql_string($str){
   $box = mysqli_real_escape_string($db_con,$str);

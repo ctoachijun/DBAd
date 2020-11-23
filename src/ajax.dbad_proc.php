@@ -27,7 +27,7 @@ switch($w_type){
 
     $pwd = base64_encode($mb_password);
     $sql = "INSERT INTO d_ad_member SET
-    mb_id='{$mb_id}', mb_password='{$pwd}', mb_name='{$mb_name}', class='{$class}'
+    mb_id='{$mb_id}', mb_tel='{$mb_tel}', mb_password='{$pwd}', mb_name='{$mb_name}', class='{$class}'
     ";
     $re = sql_query($sql);
 
@@ -44,7 +44,7 @@ switch($w_type){
 
   case "edit_member" :
     $sql = "UPDATE d_ad_member SET
-    mb_name='{$mb_name}', class='{$class}' WHERE idx={$idx}";
+    mb_name='{$mb_name}', mb_tel='{$mb_tel}', class='{$class}' WHERE idx={$idx}";
     $re = sql_query($sql);
 
     if($re){
@@ -129,11 +129,9 @@ switch($w_type){
     $response = curl_exec($ch);
     curl_close($ch);
 
-    $box = explode(":",$response);
-    $box2 = explode("\"",end($box));
-    $contry = $box2[1];
+    $response = json_decode($response,true);
+    $output['re'] = $response['whois']['countryCode'];
 
-    $output['re'] = $contry;
     echo json_encode($output,JSON_UNESCAPED_UNICODE);
 
   break;

@@ -4,6 +4,9 @@ include_once('../dbad_lib.php');
 
 $token = $_SESSION['token'];
 $mb_id = $_SESSION['mb_id'];
+// echo session_id();
+// echo "<br>";
+// print_r($_SESSION);
 
 if(!chk_token($token,$mb_id)){
   $mb_id = "";

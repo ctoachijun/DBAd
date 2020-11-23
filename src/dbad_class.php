@@ -1,6 +1,10 @@
 <?php
 include_once('./dbad_head.php');
 
+if($mb_id!="admin"){
+  echo "<script>location.replace('./dbad_list.php');</script>";
+}
+
 if(!$table){
   $table = "d_class";
 }
@@ -26,7 +30,7 @@ if(!$end){
               <th></th>
             </tr>
 
-    <?      getClass();    ?>
+    <?      getClass($cur_page,$end);    ?>
 
           </table>
         </div>
@@ -56,7 +60,7 @@ if(!$end){
       </div>
 
       <div class="paging">
-        <? getPaging($table,$cur_page,$mb_id) ?>
+        <? getPaging($table,$cur_page,$mb_id,$ref) ?>
       </div>
 
 

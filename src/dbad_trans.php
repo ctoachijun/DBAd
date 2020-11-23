@@ -1,13 +1,16 @@
 <?php
 include_once('./dbad_head.php');
 
+if($mb_id!="admin"){
+  echo "<script>location.replace('./dbad_list.php');</script>";
+}
+
+
 $hour = sprintf("%02d",rand(0,23));
 $min = sprintf("%02d",rand(0,59));
 $sec = sprintf("%02d",rand(0,59));
 
 $hms = $hour.":".$min.":".$sec;
-
-
 
 ?>
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>

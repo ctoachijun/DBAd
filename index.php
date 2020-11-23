@@ -1,10 +1,11 @@
 <?php
-// include_once('./dbad_lib.php');
 
-if(@$logout=="out"){
+if(@$_GET['logout']=="out"){
+  session_start();
   session_destroy();
   session_unset();
 }
+// print_r($_SESSION);
 
 
 ?>

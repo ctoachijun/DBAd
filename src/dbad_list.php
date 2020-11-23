@@ -30,7 +30,7 @@ if(!$end){
             <th class="th_cont">전화번호</th>
             <th class="th_cont">ip주소</th>
             <th class="th_date">날짜 시간</th>
-            <th class="th_class">분류</th>
+            <th class="th_class_name">분류</th>
             <th class="th_class">광고</th>
           </tr>
 

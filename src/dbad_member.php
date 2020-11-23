@@ -1,6 +1,11 @@
 <?php
 include_once('./dbad_head.php');
 
+if($mb_id!="admin"){
+  echo "<script>location.replace('./dbad_list.php');</script>";
+}
+
+
 if(!$table){
   $table = "d_ad_member";
 }
@@ -10,6 +15,8 @@ if(!$cur_page){
 if(!$end){
   $end = 10;   // page_rows 값을 넣어줌
 }
+
+
 
 ?>
 
@@ -23,6 +30,7 @@ if(!$end){
             <tr class="tr_head">
               <th>번호</th>
               <th>ID</th>
+              <th>연락처</th>
               <th>업체명</th>
               <th>광고종류</th>
               <th></th>
@@ -59,6 +67,10 @@ if(!$end){
                       <input type="text" name="mb_name" class="form-control" id="cn">
                   </div>
                   <div class="form-group">
+                      <label for="ct">연락처</label>
+                      <input type="text" maxlength="11" onKeyup="this.value=this.value.replace(/[^0-9]/g,'');" placeholder='숫자만 입력' name="mb_tel" class="form-control" id="ct">
+                  </div>
+                  <div class="form-group">
                       <label for="sl1">광고종류</label>
                       <? getClassSelector() ?>
                   </div>
@@ -71,7 +83,7 @@ if(!$end){
       </div>
 
       <div class="paging">
-        <? getPaging($table,$cur_page,$mb_id) ?>
+        <? getPaging($table,$cur_page,$mb_id,$ref) ?>
       </div>
 
     </div>

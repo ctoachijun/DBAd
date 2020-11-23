@@ -34,6 +34,7 @@ function insert_mem(){
   let mb_password = $("input[name=mb_password]").val();
   let mb_password_re = $("input[name=mb_password_re]").val();
   let mb_name = $("input[name=mb_name]").val();
+  let mb_tel = $("input[name=mb_tel]").val();
   let class_num = $("#sl2").val();
 
   if(!mb_id){
@@ -60,10 +61,13 @@ function insert_mem(){
     $("#cn").focus();
     return false;
   }
+  if(!mb_tel){
+    alert("연락처를 입력해 주세요.");
+    $("#ct").focus();
+    return false;
+  }
 
-
-  let box = { "w_type":"insert_member", "mb_name":mb_name, "class":class_num, "mb_id":mb_id, "mb_password":mb_password };
-
+  let box = { "w_type":"insert_member", "mb_name":mb_name, "class":class_num, "mb_id":mb_id, "mb_password":mb_password, "mb_tel":mb_tel };
   $.ajax({
           url: "ajax.dbad_proc.php",
           type: "post",
@@ -71,7 +75,7 @@ function insert_mem(){
           data: box
   }).done(function(data){
     let json = JSON.parse(data);
-    console.log(json.sql);
+    // console.log(json.sql);
     if(json.state=="Y"){
       alert("등록 했습니다.");
       history.go(0);
@@ -84,8 +88,9 @@ function insert_mem(){
 
 function edit_mem(num){
   let mb_name = $("input[name=mb_name"+num+"]").val();
+  let mb_tel = $("input[name=mb_tel"+num+"]").val();
   let class_num = $("select[name=class"+num+"]").val();
-  let box = {"w_type":"edit_member", "idx":num, "mb_name":mb_name, "class":class_num};
+  let box = {"w_type":"edit_member", "idx":num, "mb_name":mb_name, "mb_tel":mb_tel, "class":class_num};
 
   $.ajax({
           url: "ajax.dbad_proc.php",
@@ -304,11 +309,18 @@ function sendDummy(){
     });
   }
 
-
   // 위 데이터들을 원하는 데이터형식으로 취합해 URL 또는 API를 이용하면 된다.
 }
 
 
 function sortRef(){
   $("FORM").submit();
+}
+
+
+function onlyNum(obj){
+  let val1;
+  val1 = obj.value;
+  val1 = val1.replace(/[^0-9]/g,"");
+  obj.value = val1;
 }

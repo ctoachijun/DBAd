@@ -1,5 +1,4 @@
 <?php
-include_once('../dbad_config.php');
 $host = $_SERVER["SERVER_NAME"];
 
 ini_set("session.use_trans_sid", 0);    // PHPSESSID를 자동으로 넘기지 않음
@@ -13,6 +12,8 @@ ini_set("display_errors",0);
 
 
 session_start();
+
+include_once('../dbad_config.php');
 
 //==========================================================================================================================
 // extract($_GET); 명령으로 인해 page.php?_POST[var1]=data1&_POST[var2]=data2 와 같은 코드가 _POST 변수로 사용되는 것을 막음
@@ -84,11 +85,6 @@ function getList($start,$end,$mb_id,$ref){
   $box = sql_fetch($sql);
   $m_class = $box['class'];
 
-  $slimit = $start * $end - $end;
-  if($slimit < 0){
-    $slimit = 1;
-  }
-
   if($mb_id=='admin'){
     $class_txt = "1";
   }else{
@@ -97,8 +93,14 @@ function getList($start,$end,$mb_id,$ref){
 
   if($ref > 0){
     $type_txt = "&& type={$ref}";
+    $start=1;
   }else{
     $type_txt = "";
+  }
+
+  $slimit = $start * $end - $end;
+  if($slimit < 0){
+    $slimit = 1;
   }
 
   $sql = "SELECT * FROM d_log_info WHERE {$class_txt} {$type_txt} ORDER BY w_date DESC, w_hour DESC LIMIT {$slimit},{$end}";
@@ -164,10 +166,15 @@ function getList($start,$end,$mb_id,$ref){
 }
 
 
-function getClass(){
-  $sql = "SELECT * FROM d_class WHERE view='Y'";
+function getClass($start,$end){
+  if($start==1){
+    $start=0;
+  }else{
+    $start = $start * $end - $end;
+  }
+  $sql = "SELECT * FROM d_class WHERE view='Y' ORDER BY idx DESC LIMIT {$start},{$end}";
   $re = sql_query($sql);
-  $i = 1;
+  $i = $start + 1;
 
   while($rs = sql_fetch_array($re)){
     $c_name = $rs['c_name'];
@@ -202,6 +209,7 @@ function getMember($start,$end){
     $mb_name = $rs['mb_name'];
     $idx = $rs['idx'];
     $class = $rs['class'];
+    $mb_tel = $rs['mb_tel'];
 
     $csql = "SELECT * FROM d_class WHERE view='Y'";
     $cre = sql_query($csql);
@@ -210,6 +218,7 @@ function getMember($start,$end){
           <tr>
             <td class='td_num'>{$i}</td>
             <td class='td_id'><p>{$mb_id}</p></td>
+            <td class='td_tel'><input type='text' maxlength='11' onKeyup='this.value=this.value.replace(/[^0-9]/g,\"\");' placeholder='숫자만 입력' name='mb_tel{$idx}' class='form-control' value='{$mb_tel}' /></td>
             <td class='td_cont'><input type='text' name='mb_name{$idx}' class='form-control' value='{$mb_name}' /></td>
             <td class='td_cont'>
               <select name='class{$idx}' class='form-control' id='sl1'>
@@ -313,6 +322,7 @@ function getPaging($table,$cur_page,$mb_id,$ref){
 
 
   $sql = "SELECT * FROM {$table} WHERE {$where}";
+  // echo $sql;
   // 페이징
   $total_cnt = sql_num_rows(sql_query($sql));  // 전체 게시물수
   $page_rows = 10;  // 한페이지에 표시할 데이터 수
@@ -419,9 +429,102 @@ function getPaging($table,$cur_page,$mb_id,$ref){
   echo "<li class='{$end_class}'><a {$li_href2}><span>»</span></a></li>";
   echo "</ul>";
 
+}
 
+
+function getAlimToken(){
+  $_apiURL	  =	'https://kakaoapi.aligo.in/akv10/token/create/30/s/';
+  $_hostInfo	=	parse_url($_apiURL);
+  $_port		  =	(strtolower($_hostInfo['scheme']) == 'https') ? 443 : 80;
+  $_variables	=	array(
+    'apikey' => 'zybsha98q0ef1vxnkl2yajhp4oge7055',
+    'userid' => 'rhkrdmsxor'
+  );
+
+  $oCurl = curl_init();
+  curl_setopt($oCurl, CURLOPT_PORT, $_port);
+  curl_setopt($oCurl, CURLOPT_URL, $_apiURL);
+  curl_setopt($oCurl, CURLOPT_POST, 1);
+  curl_setopt($oCurl, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($oCurl, CURLOPT_POSTFIELDS, http_build_query($_variables));
+  curl_setopt($oCurl, CURLOPT_SSL_VERIFYPEER, FALSE);
+
+  $ret = curl_exec($oCurl);
+  $error_msg = curl_error($oCurl);
+  curl_close($oCurl);
+
+
+  // JSON 문자열 배열 변환
+  $retArr = json_decode($ret);
+  return $retArr;
 
 }
+
+
+function sendAlimTalk($msg,$class){
+  $sql = "SELECT * FROM d_ad_member WHERE class = $class";
+  $re = sql_query($sql);
+
+  $i = 1;
+  while($rs = sql_fetch_array($re)){
+    $telbox[$i] = $rs['mb_tel'];
+    $namebox[$i] = $rs['mb_name'];
+    $i++;
+  }
+
+  $cnt = count($telbox);
+  $alim_token = getAlimToken();
+  $token = $alim_token->token;
+  $subject = "[DBAD 알림]";
+
+  $result = sendAlim($telbox,$namebox,$subject,$msg,$token,$cnt);
+
+  return $result;
+}
+
+
+function sendAlim($receiver,$recv_name,$subject,$msg,$token,$cnt){
+  $_apiURL    =	'https://kakaoapi.aligo.in/akv10/alimtalk/send/';
+  $_hostInfo  =	parse_url($_apiURL);
+  $_port      =	(strtolower($_hostInfo['scheme']) == 'https') ? 443 : 80;
+
+  $variables =	array(
+    'apikey'      => 'zybsha98q0ef1vxnkl2yajhp4oge7055',
+    'userid'      => 'rhkrdmsxor',
+    'token'       => $token,
+    'senderkey'   => 'be33d86d72a5237b79186eee03064049f5ea1e47',
+    'tpl_code'    => '전송할 템플릿 코드',
+    'sender'      => '01064631248',
+    'testMode'    => 'Y'  // 연동테스트
+  );
+
+  for($i=1; $i<=$cnt; $i++){
+    $variables['receiver_'.$i]=$receiver[$i];
+    $variables['recvname_'.$i]=$recv_name[$i];
+    $variables['subject_'.$i]=$subject;
+    $variables['message_'.$i]=$msg;
+  }
+
+  // return $variables;
+
+  $oCurl = curl_init();
+  curl_setopt($oCurl, CURLOPT_PORT, $_port);
+  curl_setopt($oCurl, CURLOPT_URL, $_apiURL);
+  curl_setopt($oCurl, CURLOPT_POST, 1);
+  curl_setopt($oCurl, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($oCurl, CURLOPT_POSTFIELDS, http_build_query($_variables));
+  curl_setopt($oCurl, CURLOPT_SSL_VERIFYPEER, FALSE);
+
+  $ret = curl_exec($oCurl);
+  $error_msg = curl_error($oCurl);
+  curl_close($oCurl);
+
+  // JSON 문자열 배열 변환
+  $retArr = json_decode($ret);
+  return $retArr;
+
+}
+
 
 
 
