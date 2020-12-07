@@ -27,11 +27,12 @@ if(!$end){
           <tr class="tr_head">
             <th class="th_num">번호</th>
             <th class="th_name">이름</th>
-            <th class="th_cont">전화번호</th>
+            <th class="th_cont">휴대폰번호</th>
             <th class="th_cont">ip주소</th>
             <th class="th_date">날짜 시간</th>
             <th class="th_class_name">분류</th>
             <th class="th_class">광고</th>
+            <th class="th_blank"></th>
           </tr>
 
       <?  getList($cur_page,$end,$mb_id,$ref)  ?>
@@ -40,6 +41,7 @@ if(!$end){
       </div>
       <div class="r_btn">
         <form method="POST" name="sort_form" id="sform" action="<?=$url?>">
+          <input type="hidden" name="cur_page" id="curp"/>
           <div class="radio_b">
             <input type="radio" id="r1" name="ref" value="0" onclick="sortRef()" <? if($ref==0) echo "checked"; ?>/>
             <label for="r1">전체</label>
@@ -58,10 +60,14 @@ if(!$end){
           </div>
           <div class="radio_b">
             <input type="radio" id="r5" name="ref" value="4" onclick="sortRef()" <? if($ref==4) echo "checked"; ?>/>
+            <label for="r5">네이트</label>
+          </div>
+          <div class="radio_b">
+            <input type="radio" id="r5" name="ref" value="5" onclick="sortRef()" <? if($ref==5) echo "checked"; ?>/>
             <label for="r5">뉴스</label>
           </div>
           <div class="radio_b">
-            <input type="radio" id="r6" name="ref" value="5" onclick="sortRef()" <? if($ref==5) echo "checked"; ?>/>
+            <input type="radio" id="r6" name="ref" value="6" onclick="sortRef()" <? if($ref==6) echo "checked"; ?>/>
             <label for="r6">블로그</label>
           </div>
         </form>

@@ -27,6 +27,7 @@ if(!$mb_id){
       document.location.href='../index.php'
     </script>
     ";
+  exit;
 }
 
 // echo "mb_id : $mb_id <br>";
@@ -83,7 +84,9 @@ if(!$mb_id){
       <? if($mb_id=="admin"){ ?>
           <button class="btn btn-primary" onclick="move(2)">회원관리</button>
           <button class="btn btn-primary" onclick="move(3)">광고관리</button>
-          <button class="btn btn-primary" onclick="move(4)">전송관리</button>
+          <button class="btn btn-primary" onclick="move(4)">비밀번호관리</button>  
         <? } ?>
+          <button class="btn btn-primary" onclick="move(5)">전송관리</button>
+
         </div>
       </div>

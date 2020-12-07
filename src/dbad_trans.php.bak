@@ -8,6 +8,14 @@ if($mb_id != "admin"){
 }
 
 
+$hour = sprintf("%02d",rand(0,23));
+$min = sprintf("%02d",rand(0,59));
+$sec = sprintf("%02d",rand(0,59));
+
+$hms = $hour.":".$min.":".$sec;
+
+$randip = getRandIp();
+echo $randip;
 
 
 ?>
@@ -17,23 +25,37 @@ if($mb_id != "admin"){
 
   <div id="ad_trans">
     <div class="cont">
-
-      <div class="input_1">
-        <div class="area1">
-          <fieldset>
-            <legend>이름</legend>
-            <textarea class="txtarea form-control" id="txta1"></textarea>
-          </fieldset>
-          <fieldset>
-            <legend>연락처</legend>
-            <textarea class="txtarea form-control" id="txta2"></textarea>
-          </fieldset>
+      <div class="left">
+        <div class="title_top">
+          <h3>IP주소 선택</h3>
         </div>
-        <div class="area2">
+        <div class="ipaddress">
+
+    <?   getIpaddr(); ?>
+
+        </div>
+      </div>
+
+      <div class="right">
+        <div class="title_top">
+          <h3>데이터 입력</h3>
+        </div>
+        <div class="data_send">
+          <input type="hidden" id="hms" value="<?=$hms?>" />
           <table name="send_table">
             <tr>
               <th>날짜 선택</th>
               <td class="td_cont"><input type="text" name="w_date" id="DatePicker" /></td>
+            </tr>
+            <tr><td class="blank"></td></tr>
+            <tr>
+              <th>이름</th>
+              <td class="td_cont"><input type="text" name="name" /></td>
+            </tr>
+            <tr><td class="blank"></td></tr>
+            <tr>
+              <th>휴대폰번호</th>
+              <td class="td_cont"><input type="text" name="tel_num" maxlength="11" oninput="this.value=this.value.replace(/[^0-9.]/g,'').replace(/(\..*)\./g, '$1');" placeholder=" - 빼고입력"/></td>
             </tr>
             <tr><td class="blank"></td></tr>
             <tr>
@@ -46,18 +68,8 @@ if($mb_id != "admin"){
               <td class="btn_td" colspan="2"><button onclick="sendDummy()" class="btn send">전송</button></td>
             </tr>
           </table>
+
         </div>
-      </div>
-      <div class="input_2">
-        <fieldset>
-          <legend>※입력시 주의사항※</legend>
-          <p>이름, 연락처 입력시 / 를 이용해 구분을 해야 인식이 됩니다.<br>
-            입력건수가 많을수록 입력에 시간이 소요되니 참고하시길 바랍니다.<br>
-            예) 김일/박이/최삼/이사/....</p>
-          <p>연락처의 경우 - 을 제외하고 숫자만 입력을 해 주시길 바랍니다.<br>
-            예) 01043920394/01039482039/01039482099/.....
-          </p>
-        </fieldset>
       </div>
 
     </div>

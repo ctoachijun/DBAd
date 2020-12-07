@@ -137,11 +137,45 @@ switch($w_type){
   break;
 
   case "send_dummy" :
-    $sql = "INSERT INTO d_log_info SET
-    name='{$name}', tel='{$tel_num}', ip_addr='{$ipaddr}', w_date='{$w_date}', w_hour='{$hms}', type={$type}, class={$class}";
-    $re = sql_query($sql);
+    $name_box = explode("/",$name);
+    $tel_box = explode("/",$tel_num);
 
-    $output['sql'] = $sql;
+
+    // 이름입력수를 기준으로 처리
+    $cnt = count($name_box);
+    $output['cnt'] = $cnt;
+
+    for($i=0,$a=0; $i<$cnt; $i++,$a++){
+      // 랜덤IP
+      $ip = getRandIp();
+
+      // 랜덤시간
+      $hour = sprintf("%02d",rand(0,23));
+      $min = sprintf("%02d",rand(0,59));
+      $sec = sprintf("%02d",rand(0,59));
+      $hms = $hour.":".$min.":".$sec;
+
+      // 랜덤 타입
+      $type = rand(1,6);
+
+      $tel = htmlspecialchars(preg_replace('/\r\n|\r|\n/','',$tel_box[$i]));
+      $name = htmlspecialchars(preg_replace('/\r\n|\r|\n/','',$name_box[$i]));
+      if($name){
+        $sql = "INSERT INTO d_log_info SET
+        name='{$name}', tel='{$tel}', ip_addr='{$ip}', w_date='{$w_date}', w_hour='{$hms}', type={$type}, class={$class}";
+
+        $re = sql_query($sql);
+        // 오천건마다 2초 딜레이
+        $sleepint = $a % 5000;
+        $output['sleep'.$i] = $sleepint;
+        if($a!=0 && $sleepint == 0){
+          sleep(2);
+        }
+      }
+    }
+
+
+    // $output['sql'] = $sql;
     if($re){
       $output['state'] = "Y";
     }else{
@@ -153,6 +187,51 @@ switch($w_type){
     // 전송할 API 에 curl 처리할거있으면 하기
 
   break;
+
+  case "del_info" :
+    $sql = "DELETE FROM d_log_info WHERE idx={$idx}";
+    $re = sql_query($sql);
+
+    $output['sql'] = $sql;
+    if($re){
+      $output['state'] = "Y";
+    }else{
+      $output['state'] = "N";
+    }
+
+    echo json_encode($output,JSON_UNESCAPED_UNICODE);
+  break;
+
+  case "secondPw" :
+    $pwd = base64_encode($pw);
+    if($num==1){
+      $sql = "update d_ad_member SET mb_password='{$pwd}' WHERE mb_id='admin'";
+    }else{
+      $sql = "update d_second_pw SET password='{$pwd}'";
+    }
+    $re = sql_query($sql);
+    $output['sql'] = $sql;
+    if($re){
+      $output['state'] = "Y";
+    }else{
+      $output['state'] = "N";
+    }
+    echo json_encode($output,JSON_UNESCAPED_UNICODE);
+  break;
+
+  case "lookup2ndpw" :
+    $sql = "SELECT * FROM d_second_pw";
+    $rs = sql_fetch($sql);
+    $pwd = base64_decode($rs['password']);
+
+    if($pw == $pwd){
+      $output['state'] = "Y";
+    }else{
+      $output['state'] = "N";
+    }
+    echo json_encode($output,JSON_UNESCAPED_UNICODE);
+  break;
+
 
 
 }

@@ -24,8 +24,11 @@ function move(num){
   }else if(num==3){
     location.href='dbad_class.php';
   }else if(num==4){
+    location.href='dbad_pw_mng.php';
+  }else if(num==5){
     location.href='dbad_trans.php';
   }
+
 }
 
 
@@ -281,18 +284,23 @@ function confirmIp(){
 
 
 function sendDummy(){
-  let ipaddr = chkIp();
-  if(!ipaddr){
+  let w_date = $("#DatePicker").val();
+  let name = $("#txta1").val();
+  let tel_num = $("#txta2").val();
+  let sclass = $("#sl2").val();
+
+  if(!name){
+    alert("이름을 입력해 주세요");
     return false;
   }
-  let w_date = $("#DatePicker").val();
-  let name = $("input[name=name]").val();
-  let tel_num = $("input[name=tel_num]").val();
-  let sclass = $("#sl2").val();
-  let hms = $("#hms").val();
+  if(!tel_num){
+    alert("연락처를 입력해 주세요");
+    return false;
+  }
+
 
   if(confirm("전송하시겠습니까?")){
-    let box = {"w_type":"send_dummy", "ipaddr":ipaddr, "w_date":w_date, "name":name, "tel_num":tel_num, "class":sclass, "hms":hms}
+    let box = {"w_type":"send_dummy", "w_date":w_date, "name":name, "tel_num":tel_num, "class":sclass,}
     $.ajax({
             url: "ajax.dbad_proc.php",
             type: "post",
@@ -300,7 +308,7 @@ function sendDummy(){
             data: box
     }).done(function(data){
       let json = JSON.parse(data);
-      console.log(json.sql);
+      console.log(json.cnt);
       if(json.state=="Y"){
         alert("전송했습니다.");
       }else{
@@ -314,6 +322,7 @@ function sendDummy(){
 
 
 function sortRef(){
+  $("#curp").val(1);
   $("FORM").submit();
 }
 
@@ -323,4 +332,112 @@ function onlyNum(obj){
   val1 = obj.value;
   val1 = val1.replace(/[^0-9]/g,"");
   obj.value = val1;
+}
+
+
+function del_info(idx){
+  if(confirm("삭제하시겠습니까?")){
+    let box = {"w_type":"del_info", "idx":idx}
+    $.ajax({
+            url: "ajax.dbad_proc.php",
+            type: "post",
+            contentType:'application/x-www-form-urlencoded;charset=UTF8',
+            data: box
+    }).done(function(data){
+      let json = JSON.parse(data);
+      console.log(json.sql);
+      if(json.state=="Y"){
+        alert("삭제했습니다.");
+        history.go(0);
+      }else{
+        alert("삭제에 실패 했습니다.");
+      }
+    });
+  }
+}
+
+function setting_pw(num){
+  let msg = "";
+  let pw1;
+  let pw2;
+  if(num==1){
+    pw1 = $("#admin_pw").val();
+    pw2 = $("#admin_pw_re").val();
+    if(!pw1){
+      alert("비밀번호를 입력해주세요.");
+      $("#admin_pw").focus();
+      return false;
+    }
+    if(!pw2){
+      alert("비밀번호를 입력해주세요.");
+      $("#admin_pw_re").focus();
+      return false;
+    }
+    if(pw1 != pw2){
+      alert("비밀번호가 맞지않습니다.");
+      $("#admin_pw").focus();
+      return false;
+    }else{
+      msg = "관리자 비밀번호를";
+    }
+
+  }else if(num==2){
+    pw1 = $("#second_pw").val();
+    pw2 = $("#second_pw_re").val();
+    if(!pw1){
+      alert("비밀번호를 입력해주세요.");
+      $("#second_pw").focus();
+      return false;
+    }
+    if(!pw2){
+      alert("비밀번호를 입력해주세요.");
+      $("#second_pw_re").focus();
+      return false;
+    }
+    if(pw1 != pw2){
+      alert("비밀번호가 맞지않습니다.");
+      $("#second_pw").focus();
+      return false;
+    }else{
+      msg = "2차 비밀번호를";
+    }
+  }
+
+  let box = {"w_type":"secondPw","pw":pw1, "num":num}
+  if(confirm(msg+" 설정하시겠습니까?")){
+    $.ajax({
+            url: "ajax.dbad_proc.php",
+            type: "post",
+            contentType:'application/x-www-form-urlencoded;charset=UTF8',
+            data: box
+    }).done(function(data){
+      let json = JSON.parse(data);
+      console.log(json.sql);
+      if(json.state=="Y"){
+        alert(msg + "설정 했습니다.");
+        history.go(0);
+      }else{
+        alert(msg + "설정에 실패 했습니다.");
+      }
+    });
+  }
+}
+
+
+function confirm_pw(){
+  let pw = $("#second_pw").val();
+  let box = {"w_type":"lookup2ndpw","pw":pw,}
+  $.ajax({
+          url: "ajax.dbad_proc.php",
+          type: "post",
+          contentType:'application/x-www-form-urlencoded;charset=UTF8',
+          data: box
+  }).done(function(data){
+    let json = JSON.parse(data);
+    if(json.state=="Y"){
+      location.replace('dbad_trans.php?spw=Y');
+    }else{
+      alert("비밀번호를 확인 해 주세요.");
+    }
+  });
 }

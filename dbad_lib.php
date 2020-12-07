@@ -93,7 +93,6 @@ function getList($start,$end,$mb_id,$ref){
 
   if($ref > 0){
     $type_txt = "&& type={$ref}";
-    $start=1;
   }else{
     $type_txt = "";
   }
@@ -108,6 +107,7 @@ function getList($start,$end,$mb_id,$ref){
 
   $i = $slimit + 1;
   while($rs = sql_fetch_array($re)){
+    $idx = $rs['idx'];
     $name = $rs['name'];
     $tel = $rs['tel'];
     $ip_addr = $rs['ip_addr'];
@@ -121,14 +121,24 @@ function getList($start,$end,$mb_id,$ref){
     $cbox = sql_fetch($csql);
     $c_name = $cbox['c_name'];
 
-    // 오늘 중복된 휴대전화 번호 검색
-    $jsql = "SELECT * FROM d_log_info WHERE tel='{$tel}' && w_date like '{$w_date}%'";
+    $today = date("Y-m-d");
+    $timestamp = strtotime($today);
+    $before60 = date("Y-m-d", strtotime("-60 day",$timestamp));
+
+    // echo "wdate : $w_date <br>";
+    //  echo "before : $before60 <br>";
+
+    // 60일안에  중복된 휴대전화 번호 검색
+    $jsql = "SELECT * FROM d_log_info WHERE tel='{$tel}' && (w_date > '{$before60}' && w_date <= '$today')";
+    // echo $jsql;
+    // echo "<br>";
     $joong = sql_num_rows(sql_query($jsql));
-    if($joong > 1){
+    if($joong > 1 && $w_date > $before60){
       $red_class = " class='red'";
     }else{
       $red_class = "";
     }
+    // echo "joong : $joong<br>";
 
     if($type==1){
       $type_txt = "다음";
@@ -137,11 +147,11 @@ function getList($start,$end,$mb_id,$ref){
     }else if($type==3){
       $type_txt = "구글";
     }else if($type==4){
-      $type_txt = "뉴스기사";
+      $type_txt = "네이트";
     }else if($type==5){
       $type_txt = "블로그";
     }else if($type==6){
-
+      $type_txt = "뉴스기사";
     }else if($type==7){
 
     }else if($type==8){
@@ -159,6 +169,7 @@ function getList($start,$end,$mb_id,$ref){
     echo "<td {$red_class}>{$wh}</td>";
     echo "<td {$red_class}>{$type_txt}</td>";
     echo "<td {$red_class}>{$c_name}</td>";
+    echo "<td class='td_btn'><button class='btn1' onclick='del_info({$idx})'>삭제</button></td>";
     echo "</tr>";
 
     $i++;
@@ -333,7 +344,7 @@ function getPaging($table,$cur_page,$mb_id,$ref){
     ++$total_page;
   }
 
-  $block_limit = 5; // 한 화면에 뿌려질 블럭 개수
+  $block_limit = 10; // 한 화면에 뿌려질 블럭 개수
   $total_block = ceil($total_page / $block_limit);  // 전체 블록수
   $cur_page = $cur_page ? $cur_page : 1;  // 현재 페이지
   $cur_block = ceil($cur_page / $block_limit); // 현재블럭 : 화면에 표시 될 페이지 리스트
@@ -354,13 +365,15 @@ function getPaging($table,$cur_page,$mb_id,$ref){
   $total_cnt = sql_num_rows($sql);
 
   // 이전 블럭을 눌렀을때 현재 페이지 세팅.
-  $pre_block = $cur_page - $block_limit;
+  // $pre_block = $cur_page - $block_limit;
+  $pre_block = $end_page - $block_limit;
   if($pre_block < $block_limit+1){
     $pre_block = $block_limit;
   }
 
   // 다음블럭의 첫번째 페이지 산출
-  $next_block = $cur_page + $block_limit;
+  // $next_block = $cur_page + $block_limit;
+  $next_block = $end_page + 1;
   if($next_block > $total_page){
     $next_block = (($cur_block + 1) * $block_limit) - ($block_limit-1);
   }
@@ -525,6 +538,35 @@ function sendAlim($receiver,$recv_name,$subject,$msg,$token,$cnt){
 
 }
 
+
+function getRandIp(){
+  $ip_type = rand(1,6);
+
+  if($ip_type==1){
+    $ip1 = 116;
+    $ip2 = rand(120,127);
+  }else if($ip_type==2){
+    $ip1 = 1;
+    $ip2 = rand(224,255);
+  }else if($ip_type==3){
+    $ip1 = 27;
+    $ip2 = rand(176,183);
+  }else if($ip_type==4){
+    $ip1 = 169;
+    $ip2 = rand(208,223);
+  }else if($ip_type==5){
+    $ip1 = 180;
+    $ip2 = rand(80,83);
+  }else if($ip_type==6){
+    $ip1 = 58;
+    $ip2 = rand(72,79);
+  }
+  $ip3 = rand(2,255);
+  $ip4 = rand(2,254);
+
+  return $ip1.".".$ip2.".".$ip3.".".$ip4;
+
+}
 
 
 
